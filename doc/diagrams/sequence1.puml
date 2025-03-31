@@ -1,0 +1,98 @@
+@startuml test2
+
+
+!define AWSPUML https://raw.githubusercontent.com/awslabs/aws-icons-for-plantuml/v14.0.0/dist
+
+
+title Сеть закусочных "Замысловатость"\n Схема компонентов
+left to right direction
+
+
+!define SPRITESURL https://raw.githubusercontent.com/rabelenda/cicon-plantuml-sprites/v2.0/sprites
+
+
+!define serviceCloudX 200
+!define serviceCloudY 200
+
+
+!define awsCognito [Amazon Cognito]
+!define awsStepFunctions [Amazon StepFunctions]
+!define awsLambda [Amazon Lambda]
+!define awsCloudFormation [Amazon CloudFormation]
+!define awsDynamoDB [Amazon DynamoDB]
+!define awsSNS [Amazon SNS]
+!define awsECS [Amazon ECS]
+!define awsEKS [Amazon EKS]
+!define awsEC2 [Amazon EC2]
+!define awsKafka [Amazon Kafka]
+
+
+!define webapp [Web App]
+!define mobileapp [Mobile App]
+!define kiosk [Kiosk]
+
+
+!define paymentSystem [Payment System]
+!define marketingSolution [Marketing Solution]
+
+
+!define robot [Robot]
+!define conveyorBelt [Conveyor Belt]
+
+
+!define integrationService [Integration Service]
+
+
+!define securitySystem [Security System]
+
+
+!define orderProcessing [Order Processing]
+
+
+!define user [User]
+
+
+User --> webapp : Browse Menu
+webapp --> integrationService : Request Menu
+integrationService --> awsLambda : Query Menu
+awsLambda --> awsDynamoDB : Read Menu
+awsDynamoDB --> awsLambda : Menu Data
+awsLambda --> integrationService : Menu Response
+integrationService --> webapp : Menu Data
+User --> webapp : Order Food
+webapp --> integrationService : Request Order
+integrationService --> awsStepFunctions : Step Functions
+awsStepFunctions --> awsLambda : Check Inventory
+awsLambda --> awsDynamoDB : Read Inventory
+awsDynamoDB --> awsLambda : Inventory Data
+awsLambda --> awsStepFunctions : Inventory Check Result
+awsStepFunctions --> awsLambda : Process Order
+awsLambda --> awsDynamoDB : Update Inventory
+awsDynamoDB --> awsLambda : Inventory Update Result
+awsLambda --> awsSNS : Notify Order
+awsSNS --> awsLambda : Order Notification Result
+awsLambda --> orderProcessing : Order Data
+orderProcessing --> awsLambda : Confirm Order
+awsLambda --> awsCloudFormation : Create Resources
+awsCloudFormation --> awsECS : Create Task Definition
+awsCloudFormation --> awsEKS : Create Cluster
+awsCloudFormation --> awsEC2 : Create Instances
+awsECS --> awsLambda : Task Definition Result
+awsEKS --> awsLambda : Cluster Result
+awsEC2 --> awsLambda : Instance Result
+awsLambda --> orderProcessing : Resource Creation Result
+orderProcessing --> awsLambda : Order Ready
+awsLambda --> webapp : Order Ready Notification
+webapp --> User : Order Ready Notification
+User --> kiosk : Order Pickup
+kiosk --> awsLambda : Request Order
+awsLambda --> orderProcessing : Order Pickup Request
+orderProcessing --> awsLambda : Confirm Pickup
+awsLambda --> conveyorBelt : Move Order
+conveyorBelt --> robot : Order Delivery
+robot --> securitySystem : Order Security Check
+securitySystem --> robot : Security Check Result
+robot --> User : Order Delivery
+
+
+@enduml
